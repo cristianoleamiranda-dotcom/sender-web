@@ -1,0 +1,116 @@
+/* ============================================================
+   SENDER-WEB · styles.css — CAPA DE REDISEÑO "EDITORIAL FILM"
+   Sistema: capítulos CINEMÁTICOS oscuros (film, espectro, catálogo)
+   alternados con capítulos EDITORIALES claros (papel blanco, tinta
+   #494949, acentos #1e73be / #0085b2) — como una revista impresa
+   intercalada con un film. Se carga DESPUÉS de base.css y lo pisa.
+   ============================================================ */
+
+:root {
+  --paper: #ffffff;
+  --ink: #494949;
+  --ink-strong: #2b2b2b;
+  --rule: #dfe6ec;
+  --blue: #1e73be;
+  --cyan: #0085b2;
+}
+
+html { scroll-behavior: auto; }
+body { font-size: 17px; line-height: 1.7; }
+::selection { background: rgba(30,115,190,.28); color: #fff; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0b1220; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--blue), var(--cyan)); border-radius: 99px; }
+
+/* ---------- Aperturas de capítulo: folio editorial ---------- */
+.sec-head .folio::before { content: '—'; color: var(--cyan); margin-right: 10px; }
+.sec-head { border-bottom: 1px solid rgba(255,255,255,.10); padding-bottom: 14px; }
+h2, .hero-title { letter-spacing: -.02em; }
+h2 { font-size: clamp(38px, 6vw, 86px); }
+
+/* ---------- CAPÍTULOS CLAROS (papel) ---------- */
+.light-chapter {
+  background: var(--paper) !important;
+  color: var(--ink);
+}
+.light-chapter::before,
+.light-chapter .sec-head { border-color: var(--rule); }
+.light-chapter h2,
+.light-chapter .split-words { color: var(--ink-strong); }
+.light-chapter .label { color: var(--blue); }
+.light-chapter .sec-head .folio { color: #8a94a0; }
+.light-chapter .sec-head .folio::before { color: var(--blue); }
+.light-chapter .section-sub,
+.light-chapter p { color: var(--ink); }
+.light-chapter .fig { color: #7a848f; }
+.light-chapter .sec-head { border-bottom: 1px solid var(--rule); }
+
+/* tarjetas de capacidades sobre papel */
+.light-chapter .cap-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  box-shadow: 0 18px 50px rgba(27,43,60,.08);
+}
+.light-chapter .cap-card:hover { box-shadow: 0 26px 70px rgba(27,43,60,.14); }
+.light-chapter .cap-card h3 { color: var(--ink-strong); }
+.light-chapter .link-arrow { color: var(--blue); }
+.light-chapter .cap-note { color: #7a848f; }
+.light-chapter .cap-media { border-radius: 14px; overflow: hidden; }
+
+/* nosotros sobre papel */
+.light-chapter .about-frame { border: 1px solid var(--rule); border-radius: 20px; overflow: hidden; }
+.light-chapter .point { border-top: 1px solid var(--rule); }
+.light-chapter .point h4 { color: var(--ink-strong); }
+.light-chapter .pull {
+  border-left: 3px solid var(--blue);
+  color: var(--ink-strong);
+  font-style: italic;
+}
+.light-chapter .type-ring { opacity: .5; }
+.light-chapter section[data-wm]::before,
+section.light-chapter[data-wm]::before { -webkit-text-stroke: 1px rgba(30,115,190,.14); }
+
+/* botones sobre papel */
+.light-chapter .btn { color: var(--ink-strong); border-color: rgba(73,73,73,.35); }
+.light-chapter .btn:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ---------- Acentos globales del rediseño ---------- */
+/* nav: píldora más definida */
+.nav { border-color: rgba(255,255,255,.14); }
+
+/* hero: eyebrow con guion cian */
+.hero-eyebrow::before { content: '—'; margin-right: 12px; color: var(--cyan); }
+
+/* receipts (trayectoria): perforación de ticket más marcada */
+.receipt { border: 1px solid rgba(255,255,255,.12); }
+.receipt-n { color: var(--cyan); }
+
+/* espectro: aguja y segmento activo más brillantes */
+.seg.active { box-shadow: 0 0 0 1px rgba(0,133,178,.5), 0 0 24px rgba(0,133,178,.25); }
+
+/* proyectos: caption de slide editorial */
+.slide figcaption, .slide .fig { letter-spacing: .02em; }
+
+/* contacto: hairlines cian */
+.contact-card { border-top: 2px solid var(--cyan); }
+
+/* FAB WhatsApp con gradiente de marca */
+#wa { background: linear-gradient(135deg, var(--blue), var(--cyan)); box-shadow: 0 14px 40px rgba(0,133,178,.4); }
+
+/* velo de capítulo: filete cian superior */
+#chapter-veil { background: #0a111d; }
+.veil-folio::before { content: '—'; margin-right: 12px; }
+
+/* ---------- Responsive: papel también en móvil ---------- */
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .light-chapter .cap-card { box-shadow: none; }
+  .sec-head { padding-bottom: 10px; }
+  h2 { font-size: clamp(32px, 9vw, 48px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

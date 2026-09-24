@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sender · Ingeniería RF y Broadcasting — Rediseño scroll-driven</title>
+  <meta name="description" content="Sender (BIS SpA): transmisores AM/FM, NAVTEX y enlaces HF para radiodifusión, defensa y comunicaciones marítimas. Sitio scroll-driven con film sincronizado." />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="canonical" href="https://cristianoleamiranda-dotcom.github.io/sender-web/" />
+  <meta property="og:title" content="Sender · Ingeniería RF y Broadcasting" />
+  <meta property="og:description" content="Cuatro máquinas. Un estándar. Experiencia scroll-driven con film sincronizado." />
+  <meta property="og:image" content="./assets/brand-og.jpg" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="./assets/logo.jpg" />
+  <link rel="preload" as="image" href="./assets/hero-wide.jpg" fetchpriority="high" />
+  <link rel="preload" as="image" href="./assets/cap-critical.jpg" />
+  <link rel="preload" href="./assets/fonts/sg-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="./assets/fonts/pxm-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./base.css" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+  <script type="module" src="./app.js" defer></script>
+</head>
+<body>
+
+  <a class="skip-link" href="#hero" data-i18n="a11y.skip">Saltar al contenido</a>
+
+  <div id="film-layer" aria-hidden="true">
+    <video id="film-video" muted playsinline preload="metadata" poster="./assets/hero-wide.jpg"></video>
+    <div class="film-grain" aria-hidden="true"></div>
+<div class="film-vignette"></div>
+  </div>
+  <aside id="film-hud" class="mono" aria-hidden="true">
+    <span id="hud-chapter">CH 01</span>
+    <div class="hud-track"><i id="hud-progress"></i><b style="top:0%"></b><b style="top:32%"></b><b style="top:55%"></b><b style="top:82%"></b></div>
+    <span id="hud-section">HERO</span>
+  </aside>
+
+  <!-- PRELOADER -->
+  <div id="loader">
+    <i class="brand-bg" style="background-image:url('./assets/brand-og.jpg')" aria-hidden="true"></i>
+    <img src="./assets/logo.jpg" alt="" class="loader-logo" />
+    <div class="loader-ui">
+      <span class="loader-word">SENDER</span>
+      <span class="loader-count" id="loader-count">000</span>
+    </div>
+    <svg class="loader-wave" viewBox="0 0 220 28" aria-hidden="true"><path id="loader-wave-path" d="M4 18c18 12 36 12 54-2s36-14 54-2 36 12 54-2 32-10 50 0" fill="none" stroke="#0085b2" stroke-width="2.5" stroke-linecap="round" /></svg>
+    <div class="loader-bar"><i id="loader-bar"></i></div>
+  </div>
+
+  <div id="cursor" aria-hidden="true"></div>
+  <div id="progress" aria-hidden="true"><i></i></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <a class="nav-logo" href="#hero">SENDER<i class="nav-line"></i></a>
+    <nav class="nav-links">
+      <a href="#trayectoria" data-i18n="nav.tray">Trayectoria</a>
+      <a href="#capacidades" data-i18n="nav.cap">Capacidades</a>
+      <a href="#espectro" data-i18n="nav.esp">Espectro</a>
+      <a href="#proyectos" data-i18n="nav.proj">Proyectos</a>
+      <button class="lang-toggle" id="lang-toggle" aria-label="Cambiar idioma / Switch language">
+        <span data-lang="es" class="on">ES</span><span data-lang="en">EN</span>
+      </button>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i><i></i></button>
+    </nav>
+  </header>
+
+  <!-- MENÚ DESPLEGABLE -->
+  <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
+    <div class="menu-head">
+      <span class="mono menu-k" data-i18n="menu.title">Índice</span>
+      <button class="menu-close" id="menu-close" aria-label="Cerrar menú">✕</button>
+    </div>
+    <nav class="menu-list">
+      <a href="#trayectoria"><span class="mono">01</span><em data-i18n="nav.tray">Trayectoria</em></a>
+      <a href="#capacidades"><span class="mono">02</span><em data-i18n="nav.cap">Capacidades</em></a>
+      <a href="#catalogo"><span class="mono">03</span><em data-i18n="menu.cat">Catálogo</em></a>
+      <a href="#espectro"><span class="mono">04</span><em data-i18n="nav.esp">Espectro</em></a>
+      <a href="#proyectos"><span class="mono">05</span><em data-i18n="nav.proj">Proyectos</em></a>
+      <a href="#nosotros"><span class="mono">06</span><em data-i18n="nav.about">Nosotros</em></a>
+      <a href="#contacto"><span class="mono">07</span><em data-i18n="nav.contact">Contacto</em></a>
+    </nav>
+    <div class="menu-foot mono">
+      <a href="tel:+56983864148">+56 9 8386 4148</a>
+      <a href="mailto:sender@sender.cl">sender@sender.cl</a>
+      <span>Blanco Viel #1108, San Miguel, Santiago</span>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="hero">
+            <div class="hero-veil"></div>
+      <div class="hero-grid container">
+        <div class="hero-copy">
+          <p class="hero-eyebrow label scramble" data-i18n="hero.eyebrow" data-text="BIS SpA · Broadcasting &amp; Telecomunicaciones · Chile">BIS SpA · Broadcasting &amp; Telecomunicaciones · Chile</p>
+          <h1 class="hero-title split-words" data-i18n="hero.title">La señal no puede fallar.</h1>
+          <p class="hero-sub" data-i18n="hero.sub">Ingeniería de radiofrecuencia para los lugares más remotos de Chile: transmisores, antenas y torres donde la señal no puede fallar.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#espectro" data-magnetic data-i18n="hero.cta1">Sintonizar el espectro</a>
+            <a class="btn btn-ghost" href="#catalogo" data-magnetic data-i18n="hero.cta3">Ver catálogo técnico</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-stats container">
+        <div class="stat"><strong><span data-count="20">0</span>+</strong><span class="stat-label" data-i18n="hero.s1">años en broadcasting</span></div>
+        <div class="stat"><strong><span data-count="60">0</span> m</strong><span class="stat-label" data-i18n="hero.s2">torre Armada de Chile</span></div>
+        <div class="stat"><strong><span data-count="3759">0</span> km</strong><span class="stat-label" data-i18n="hero.s3">enlace HF Rapa Nui</span></div>
+        <div class="stat"><strong><span data-count="15">0</span></strong><span class="stat-label" data-i18n="hero.s5">familias de equipos</span></div>
+      </div>
+      <div class="scroll-hint" aria-hidden="true"><span></span><i data-i18n="hero.hint">Desliza</i></div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span data-i18n="marquee.txt">Transmisores AM · Transmisores FM · Antenas HF 2–30 MHz · NAVTEX 490/518 kHz · Torres contraventadas · Enlaces STL · ATU · Procesadores de audio ·&nbsp;</span>
+        <span data-i18n="marquee.txt">Transmisores AM · Transmisores FM · Antenas HF 2–30 MHz · NAVTEX 490/518 kHz · Torres contraventadas · Enlaces STL · ATU · Procesadores de audio ·&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- TRAYECTORIA -->
+    <section id="trayectoria" class="section window" data-wm="01">
+      <div class="container">
+        <div class="sec-head">
+          <p class="label scramble reveal" data-i18n="tray.label" data-text="01 — Trayectoria comprobada">01 — Trayectoria comprobada</p>
+          <span class="folio mono">01 / 07</span>
+        </div>
+        <h2 class="split-words reveal" data-i18n="tray.h2">Ninguna afirmación sin su respaldo.</h2>
+        <p class="section-sub reveal" data-i18n="tray.sub">Tres proyectos reales que definen lo que hacemos: infraestructura crítica, ambientes hostiles y cero margen de error.</p>
+        <div class="receipts">
+          <article class="receipt reveal" data-tilt>
+            <span class="receipt-n">EXHIBIT A</span>
+            <h3 data-i18n="tray.a.h">Armada de Chile</h3>
+            <p data-i18n="tray.a.p">Ingeniería y desmontaje de torre autosoportada de <strong>60 metros</strong> en Playa Ancha, Valparaíso. Infraestructura de defensa ejecutada con precisión milimétrica.</p>
+            <span class="receipt-tag" data-i18n="tray.a.t">Valparaíso · Defensa</span>
+          </article>
+          <article class="receipt reveal" data-tilt>
+            <span class="receipt-n">EXHIBIT B</span>
+            <h3 data-i18n="tray.b.h">Isla de Pascua</h3>
+            <p data-i18n="tray.b.p">Comunicaciones <strong>HF de largo alcance</strong> instaladas y operando en Rapa Nui, a 3.759 km del continente. Entorno estratégico, logística extrema.</p>
+            <span class="receipt-tag" data-i18n="tray.b.t">Rapa Nui · HF largo alcance</span>
+          </article>
+          <article class="receipt reveal" data-tilt>
+            <span class="receipt-n">EXHIBIT C</span>
+            <h3 data-i18n="tray.c.h">Sistema NAVTEX</h3>
+            <p data-i18n="tray.c.p">Transmisión <strong>MF 490/518 kHz</strong> en caletas y acantilados: mensajes de seguridad continuos para la flota pesquera y mercante.</p>
+            <span class="receipt-tag" data-i18n="tray.c.t">Marítimo · NAVTEX</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAPACIDADES (con tomas 3D) -->
+    <div class="film-breath mono" aria-hidden="true"><span data-i18n="breath.1">la película continúa — desliza</span></div>
+    <section id="capacidades" class="section sheet-glass light-chapter" data-wm="02">
+      <div class="container cap-grid">
+        <div class="cap-left">
+          <div class="cap-sticky">
+            <div class="sec-head">
+              <p class="label scramble" data-i18n="cap.label" data-text="02 — Capacidades">02 — Capacidades</p>
+              <span class="folio mono">02 / 07</span>
+            </div>
+            <h2 class="split-words" data-i18n="cap.h2">Equipos que sostienen el aire de Chile.</h2>
+            <p class="section-sub" data-i18n="cap.sub">Fabricación y suministro bajo normas internacionales de broadcasting. Cada equipo, diseñado para operar décadas en territorio extremo.</p>
+            <p class="cap-note mono" data-i18n="cap.note">Las fichas rotan automáticamente entre cuatro tomas de cámara: plano general, dolly in, paneo y órbita 3D.</p>
+            <a class="link-arrow" href="#contacto" data-magnetic data-i18n="cap.link">Cotizar un equipo <span>→</span></a>
+          </div>
+        </div>
+        <div class="cap-right">
+          <article class="cap-card" data-tilt>
+            <div class="cap-media shot-stage" data-shot="0">
+              <video class="cap-video" data-slot="cap-am" muted loop playsinline preload="metadata"></video>
+              <img src="./assets/cap-transmission.jpg" alt="Base de antena AM con aisladores y radiales de tierra" loading="lazy" />
+              <span class="shot-hud mono"><i class="rec"></i><b class="shot-label">TOMA 01 · PLANO GENERAL</b></span>
+            </div>
+            <figcaption class="fig mono" data-i18n="fig.1">FIG. 01 — Base de antena AM, radiales de tierra</figcaption>
+            <div class="cap-body">
+              <h3 data-i18n="cap.1.h">Transmisión AM / MF</h3>
+              <p class="mono" data-i18n="cap.1.p">Transmisores estado sólido 1000/2000/5000 W · 490–1700 kHz · Clase D modular redundante · PWM bifásico · Antenas monopolo con torre aterrizada y protección atmosférica</p>
+            </div>
+          </article>
+          <article class="cap-card" data-tilt>
+            <div class="cap-media shot-stage" data-shot="1">
+              <video class="cap-video" data-slot="cap-fm" muted loop playsinline preload="metadata"></video>
+              <img src="./assets/cap-broadcast.jpg" alt="Sala de racks de transmisores de broadcasting" loading="lazy" />
+              <span class="shot-hud mono"><i class="rec"></i><b class="shot-label">TOMA 02 · DOLLY IN</b></span>
+            </div>
+            <figcaption class="fig mono" data-i18n="fig.2">FIG. 02 — Planta de broadcasting, racks TX</figcaption>
+            <div class="cap-body">
+              <h3 data-i18n="cap.2.h">Plantas de broadcasting</h3>
+              <p class="mono" data-i18n="cap.2.p">Transmisores FM-30 a FM-1000 · Sintetizador digital PLL 88–108 MHz · Protección ROE y temperatura · Potencia continuamente ajustable · Automatización de transmisiones</p>
+            </div>
+          </article>
+          <article class="cap-card" data-tilt>
+            <div class="cap-media shot-stage" data-shot="2">
+              <video class="cap-video" data-slot="cap-torre" muted loop playsinline preload="metadata"></video>
+              <img src="./assets/cap-antennas.jpg" alt="Torre de telecomunicaciones con paneles y enlaces microondas" loading="lazy" />
+              <span class="shot-hud mono"><i class="rec"></i><b class="shot-label">TOMA 03 · PANEO</b></span>
+            </div>
+            <figcaption class="fig mono" data-i18n="fig.3">FIG. 03 — Torre de enlaces, cordillera</figcaption>
+            <div class="cap-body">
+              <h3 data-i18n="cap.3.h">Antenas &amp; torres</h3>
+              <p class="mono" data-i18n="cap.3.p">Antena HF profesional 2–30 MHz · 1 kW · Torres contraventadas galvanizadas · Ingeniería, montaje y desmontaje · Enlaces estudio–planta STL</p>
+            </div>
+          </article>
+          <article class="cap-card" data-tilt>
+            <div class="cap-media shot-stage" data-shot="3">
+              <video class="cap-video" data-slot="cap-rf" muted loop playsinline preload="metadata"></video>
+              <img src="./assets/cap-rf.jpg" alt="Placa RF con inductores toroidales de cobre y conector SMA" loading="lazy" />
+              <span class="shot-hud mono"><i class="rec"></i><b class="shot-label">TOMA 04 · ÓRBITA 3D</b></span>
+            </div>
+            <figcaption class="fig mono" data-i18n="fig.4">FIG. 04 — Módulo RF, bobinado toroidal</figcaption>
+            <div class="cap-body">
+              <h3 data-i18n="cap.4.h">Componentes RF</h3>
+              <p class="mono" data-i18n="cap.4.p">Unidad de sintonía de antena (ATU) · Coaxial 1/2" Super Flex y LMR-400 · Condensadores de alta potencia · Circuitos integrados RF · Procesadores de audio</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT FILM (efecto referencia: exploded → macro → reassembly → turntable) -->
+    <section id="cine" class="cine-window" aria-label="Product film TX-360">
+      <div class="cine-pin">
+        <img class="cine-poster" src="./assets/cine-poster.jpg" alt="" aria-hidden="true" />
+        <video id="cine-video" muted playsinline preload="metadata"></video>
+        <div class="cine-overlay">
+          <div class="cine-top">
+            <p class="label cine-k" data-i18n="cine.k">Product film · TX-360</p>
+            <div class="cine-chapters">
+              <span class="ch active" data-ch="0" data-i18n="cine.ch1">CH 01 · ENSAMBLE</span>
+              <span class="ch" data-ch="1" data-i18n="cine.ch2">CH 02 · FLOTANTE</span>
+              <span class="ch" data-ch="2" data-i18n="cine.ch3">CH 03 · CIERRE</span>
+            </div>
+          </div>
+          <div class="cine-bottom">
+            <div class="cine-bar"><i id="cine-bar"></i></div>
+            <span class="cine-hint mono" data-i18n="cine.hint">Desliza para reproducir</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO COMPLETO (índice editorial) -->
+    <div class="film-breath mono" aria-hidden="true"><span data-i18n="breath.2">el equipo se reensambla mientras bajas</span></div>
+    <section id="catalogo" class="section prod-section sheet-glass" data-wm="03">
+    <div class="cat-cover">
+      <img class="cover-bg" src="./assets/cap-critical.jpg" alt="" aria-hidden="true">
+      <span class="cover-shade" aria-hidden="true"></span>
+      <div class="cover-copy">
+        <div class="sec-head">
+          <p class="label scramble reveal" data-i18n="cat.label" data-text="03 — Productos">03 — Productos</p>
+          <span class="folio mono">03 / 07</span>
+        </div>
+        <h2 class="split-words reveal" data-i18n="cat.h2">Cuatro máquinas. Un estándar.</h2>
+        <p class="section-sub reveal" data-i18n="cat.sub">Cada producto como en una keynote: cuatro vistas que rotan con tu scroll — o un video cuando exista.</p>
+        <span class="cover-cue mono" aria-hidden="true">SCROLL ▾</span>
+      </div>
+    </div>
+    <div class="container">
+  <article class="prod" id="prod-am" data-prod="am">
+    <div class="prod-media">
+      <div class="prod-stack">
+          <img src="./assets/stack-am-v1.jpg" alt="" class="on" />
+          <img src="./assets/stack-am-v2.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-am-v3.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-am-v4.jpg" alt="" loading="lazy" />
+      </div>
+      <video class="prod-video" data-slot="prod-am" muted playsinline preload="metadata"></video>
+      <div class="prod-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="prod-copy">
+      <p class="label mono reveal" data-i18n="prod.am.k"></p>
+      <h3 class="split-words reveal" data-i18n="prod.am.h"></h3>
+      <p class="prod-lead reveal" data-i18n="prod.am.lead"></p>
+      <ul class="prod-specs mono">
+        <li class="reveal" data-i18n="prod.am.s1"></li>
+        <li class="reveal" data-i18n="prod.am.s2"></li>
+        <li class="reveal" data-i18n="prod.am.s3"></li>
+        <li class="reveal" data-i18n="prod.am.s4"></li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="prod" id="prod-fm" data-prod="fm">
+    <div class="prod-media">
+      <div class="prod-stack">
+          <img src="./assets/stack-fm-v1.jpg" alt="" class="on" />
+          <img src="./assets/stack-fm-v2.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-fm-v3.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-fm-v4.jpg" alt="" loading="lazy" />
+      </div>
+      <video class="prod-video" data-slot="prod-fm" muted playsinline preload="metadata"></video>
+      <div class="prod-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="prod-copy">
+      <p class="label mono reveal" data-i18n="prod.fm.k"></p>
+      <h3 class="split-words reveal" data-i18n="prod.fm.h"></h3>
+      <p class="prod-lead reveal" data-i18n="prod.fm.lead"></p>
+      <ul class="prod-specs mono">
+        <li class="reveal" data-i18n="prod.fm.s1"></li>
+        <li class="reveal" data-i18n="prod.fm.s2"></li>
+        <li class="reveal" data-i18n="prod.fm.s3"></li>
+        <li class="reveal" data-i18n="prod.fm.s4"></li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="prod" id="prod-nx" data-prod="nx">
+    <div class="prod-media">
+      <div class="prod-stack">
+          <img src="./assets/stack-nx-v1.jpg" alt="" class="on" />
+          <img src="./assets/stack-nx-v2.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-nx-v3.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-nx-v4.jpg" alt="" loading="lazy" />
+      </div>
+      <video class="prod-video" data-slot="prod-nx" muted playsinline preload="metadata"></video>
+      <div class="prod-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="prod-copy">
+      <p class="label mono reveal" data-i18n="prod.nx.k"></p>
+      <h3 class="split-words reveal" data-i18n="prod.nx.h"></h3>
+      <p class="prod-lead reveal" data-i18n="prod.nx.lead"></p>
+      <ul class="prod-specs mono">
+        <li class="reveal" data-i18n="prod.nx.s1"></li>
+        <li class="reveal" data-i18n="prod.nx.s2"></li>
+        <li class="reveal" data-i18n="prod.nx.s3"></li>
+        <li class="reveal" data-i18n="prod.nx.s4"></li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="prod" id="prod-tw" data-prod="tw">
+    <div class="prod-media">
+      <div class="prod-stack">
+          <img src="./assets/stack-tw-v1.jpg" alt="" class="on" />
+          <img src="./assets/stack-tw-v2.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-tw-v3.jpg" alt="" loading="lazy" />
+          <img src="./assets/stack-tw-v4.jpg" alt="" loading="lazy" />
+      </div>
+      <video class="prod-video" data-slot="prod-tw" muted playsinline preload="metadata"></video>
+      <div class="prod-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="prod-copy">
+      <p class="label mono reveal" data-i18n="prod.tw.k"></p>
+      <h3 class="split-words reveal" data-i18n="prod.tw.h"></h3>
+      <p class="prod-lead reveal" data-i18n="prod.tw.lead"></p>
+      <ul class="prod-specs mono">
+        <li class="reveal" data-i18n="prod.tw.s1"></li>
+        <li class="reveal" data-i18n="prod.tw.s2"></li>
+        <li class="reveal" data-i18n="prod.tw.s3"></li>
+        <li class="reveal" data-i18n="prod.tw.s4"></li>
+      </ul>
+    </div>
+  </article>
+
+    <div class="container">
+      <button class="btn btn-ghost dossier-open mono" id="dossier-open" data-i18n="cat.dossier">Abrir dossier técnico (15 familias) →</button>
+    </div>
+  </section>
+
+  <!-- ESPECTRO -->
+    <section id="espectro" class="sheet sheet-dark" data-wm="04">
+      <div class="espectro-pin">
+        <div class="container espectro-inner">
+          <div class="espectro-head">
+            <div>
+              <p class="label" data-i18n="esp.label">04 — Espectro radioeléctrico</p>
+              <h2 data-i18n="esp.h2">Tu scroll es la perilla de sintonía.</h2>
+            </div>
+            <span class="folio mono light">04 / 07</span>
+          </div>
+
+          <div class="dial">
+            <div class="dial-top">
+              <div id="dial-knob" role="slider" tabindex="0" aria-label="Sintonizar el espectro / Tune the spectrum" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+              <div class="freq-box"><span id="freq">490,0</span><span class="unit" id="unit">kHz</span></div>
+              <div class="band-box"><span class="label" data-i18n="esp.bandlabel">Banda activa</span><strong id="band-name">NAVTEX</strong></div>
+              <div class="band-thumbs">
+                <img class="bthumb active" data-band="0" src="./assets/cap-critical.jpg" alt="" loading="lazy" />
+                <img class="bthumb" data-band="1" src="./assets/cap-transmission.jpg" alt="" loading="lazy" />
+                <img class="bthumb" data-band="2" src="./assets/hero.jpg" alt="" loading="lazy" />
+                <img class="bthumb" data-band="3" src="./assets/cap-antennas.jpg" alt="" loading="lazy" />
+              </div>
+            </div>
+            <canvas id="scope" height="140" aria-hidden="true"></canvas>
+            <div class="ruler">
+              <div class="needle" id="needle"></div>
+              <div class="segments">
+                <div class="seg active" data-band="0"><span>NAVTEX</span><small>490–518 kHz</small></div>
+                <div class="seg" data-band="1"><span>AM</span><small>510–1700 kHz</small></div>
+                <div class="seg" data-band="2"><span>HF</span><small>2–30 MHz</small></div>
+                <div class="seg" data-band="3"><span>FM</span><small>88–108 MHz</small></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="band-panels">
+            <div class="panel active" data-band="0">
+              <h3 data-i18n="esp.p0.h">NAVTEX · 490–518 kHz</h3>
+              <p data-i18n="esp.p0.p">MF 490/518 kHz: el canal internacional de MSI. Sistemas radiantes sellados contra salitre, viento y hielo.</p>
+              <span class="panel-product" data-i18n="esp.p0.prod">→ Sistema NAVTEX Profesional · Amplificador MF</span>
+            </div>
+            <div class="panel" data-band="1">
+              <h3 data-i18n="esp.p1.h">AM · 510–1700 kHz</h3>
+              <p data-i18n="esp.p1.p">AM 490–1700 kHz: cobertura regional de alta eficiencia con arquitectura clase D.</p>
+              <span class="panel-product" data-i18n="esp.p1.prod">→ Transmisores AM estado sólido · Antena monopolo · ATU</span>
+            </div>
+            <div class="panel" data-band="2">
+              <h3 data-i18n="esp.p2.h">HF · 2–30 MHz</h3>
+              <p data-i18n="esp.p2.p">HF 2–30 MHz, 1 kW: el enlace donde no hay infraestructura — océano, isla o cordillera.</p>
+              <span class="panel-product" data-i18n="esp.p2.prod">→ Antena HF Profesional 2–30 MHz · 1 kW</span>
+            </div>
+            <div class="panel" data-band="3">
+              <h3 data-i18n="esp.p3.h">FM · 88–108 MHz</h3>
+              <p data-i18n="esp.p3.p">FM 88–108 MHz: de 30 a 1000 W con sintetizador PLL y protección ROE para sitios de altura.</p>
+              <span class="panel-product" data-i18n="esp.p3.prod">→ Transmisores FM · Enlace STL · Procesador de audio</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROYECTOS -->
+    <div class="film-breath mono" aria-hidden="true"><span data-i18n="breath.3">tres mil setecientos cincuenta y nueve kilómetros de ingeniería</span></div>
+    <section id="proyectos" class="sheet-glass sheet-proj" data-wm="05">
+      <div class="proj-pin">
+        <div class="proj-head container">
+          <div>
+            <p class="label" data-i18n="proj.label">05 — Proyectos en terreno</p>
+            <h2 data-i18n="proj.h2">Donde el mapa se acaba,<br />empieza Sender.</h2>
+          </div>
+          <span class="proj-count mono"><b id="proj-now">01</b> / 04</span>
+        </div>
+        <div class="htrack" id="htrack">
+          <article class="slide">
+            <div class="slide-media" data-parallax><img src="./assets/proj-am.jpg" alt="Transmisor AM con instrumentos analógicos en sala de plantas" loading="lazy" /></div>
+            <div class="slide-info">
+              <span class="slide-loc mono" data-i18n="proj.1.loc">Planta AM · Estado sólido</span>
+              <h3 data-i18n="proj.1.h">Transmisión AM de nueva generación</h3>
+              <p data-i18n="proj.1.p">Rack AM-5000SS en planta nacional: estabilidad ±5 Hz y un año de operación continua sin deriva medible.</p>
+            </div>
+          </article>
+          <article class="slide">
+            <div class="slide-media" data-parallax><img src="./assets/proj-stl.jpg" alt="Antena de enlace STL sobre Santiago al atardecer" loading="lazy" /></div>
+            <div class="slide-info">
+              <span class="slide-loc mono" data-i18n="proj.2.loc">Santiago · Enlace estudio–planta</span>
+              <h3 data-i18n="proj.2.h">STL sobre el valle del Maipo</h3>
+              <p data-i18n="proj.2.p">Enlaces estudio–planta para radio AM y FM sobre la cordillera de la costa: audio limpio, latencia cero, operación sin supervisión permanente.</p>
+            </div>
+          </article>
+          <article class="slide">
+            <div class="slide-media" data-parallax><img src="./assets/hero.jpg" alt="Mástil arriostrado con balizas rojas entre niebla costera" loading="lazy" /></div>
+            <div class="slide-info">
+              <span class="slide-loc mono" data-i18n="proj.3.loc">Rapa Nui · 3.759 km</span>
+              <h3 data-i18n="proj.3.h">HF de largo alcance en Isla de Pascua</h3>
+              <p data-i18n="proj.3.p">Solución de comunicaciones HF instalada y operando en entorno estratégico: 3.759 km de océano cubiertos por ingeniería chilena.</p>
+            </div>
+          </article>
+          <article class="slide">
+            <div class="slide-media" data-parallax><img src="./assets/cap-critical.jpg" alt="Estación radioeléctrica en acantilado con niebla marítima" loading="lazy" /></div>
+            <div class="slide-info">
+              <span class="slide-loc mono" data-i18n="proj.4.loc">Litoral · Seguridad marítima</span>
+              <h3 data-i18n="proj.4.h">NAVTEX donde el mar manda</h3>
+              <p data-i18n="proj.4.p">Estaciones NAVTEX integradas con transmisores Sender: operación sin supervisión en costa chilena.</p>
+            </div>
+          </article>
+          <article class="slide">
+            <div class="slide-media" data-parallax><img src="./assets/render-navtex-1u.jpg" alt="Render de estudio de unidad NAVTEX rackeable de 1U sobre piso reflectante" loading="lazy" /></div>
+            <div class="slide-info">
+              <span class="slide-loc mono" data-i18n="proj.5.loc">Render de estudio · Unidad 1U</span>
+              <h3 data-i18n="proj.5.h">NAVTEX 1U · Serie marina</h3>
+              <p data-i18n="proj.5.p">Visualización de estudio de la unidad NAVTEX rackeable: display frontal, control UP/DOWN y chassis de 1U para sala de equipos.</p>
+            </div>
+          </article>
+          <article class="slide">
+            <div class="slide-media" data-parallax><img src="./assets/render-torre-night.jpg" alt="Render nocturno de mástil arriostrado con tensores y balizas rojas" loading="lazy" /></div>
+            <div class="slide-info">
+              <span class="slide-loc mono" data-i18n="proj.6.loc">Render nocturno · Mástil arriostrado</span>
+              <h3 data-i18n="proj.6.h">Torre contraventada bajo balizas</h3>
+              <p data-i18n="proj.6.p">Render cinematográfico del mástil arriostrado galvanizado: tensores, anclajes de hormigón y balizas rojas para operación en intemperie.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="container prop-wrap">
+        <div class="sec-head">
+          <p class="label scramble reveal" data-i18n="prop.label" data-text="Propagación HF · Santiago → Rapa Nui">Propagación HF · Santiago → Rapa Nui</p>
+          <span class="folio mono">05 / 07</span>
+        </div>
+        <div class="propagation reveal">
+          <video class="prop-video" id="prop-video" muted playsinline preload="metadata"></video>
+          <svg id="prop-map" viewBox="0 0 1000 420" role="img" aria-label="Mapa de propagación de señal HF entre Santiago e Isla de Pascua">
+            <defs>
+              <linearGradient id="arc-grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#0085b2" />
+                <stop offset="100%" stop-color="#1e73be" />
+              </linearGradient>
+              <radialGradient id="pulse-grad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#0085b2" stop-opacity=".9" />
+                <stop offset="100%" stop-color="#0085b2" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <g stroke="rgba(73,73,73,0.10)" stroke-width="1">
+              <line x1="0" y1="70" x2="1000" y2="70" /><line x1="0" y1="140" x2="1000" y2="140" />
+              <line x1="0" y1="210" x2="1000" y2="210" /><line x1="0" y1="280" x2="1000" y2="280" />
+              <line x1="0" y1="350" x2="1000" y2="350" />
+              <line x1="100" y1="0" x2="100" y2="420" /><line x1="300" y1="0" x2="300" y2="420" />
+              <line x1="500" y1="0" x2="500" y2="420" /><line x1="700" y1="0" x2="700" y2="420" />
+              <line x1="900" y1="0" x2="900" y2="420" />
+            </g>
+            <path d="M 850 20 L 880 60 L 860 110 L 885 160 L 865 220 L 890 280 L 860 340 L 875 400 L 840 400 L 830 330 L 845 260 L 825 190 L 845 120 L 828 60 Z"
+                  fill="rgba(30,115,190,0.10)" stroke="rgba(30,115,190,0.45)" stroke-width="1.5" />
+            <circle id="island-pulse" cx="140" cy="215" r="26" fill="url(#pulse-grad)" opacity="0" />
+            <circle cx="140" cy="215" r="5" fill="#0085b2" />
+            <circle cx="852" cy="196" r="5" fill="#1e73be" />
+            <path id="link-path" d="M 852 196 C 650 40, 350 40, 140 215" fill="none" stroke="url(#arc-grad)" stroke-width="2.5" stroke-linecap="round" />
+            <text x="868" y="228" fill="rgba(73,73,73,0.75)" font-size="15" font-family="IBM Plex Mono, monospace">Santiago · Planta TX</text>
+            <text x="156" y="248" fill="rgba(73,73,73,0.75)" font-size="15" font-family="IBM Plex Mono, monospace">Rapa Nui · RX HF</text>
+            <text x="430" y="88" fill="rgba(73,73,73,0.45)" font-size="13" font-family="IBM Plex Mono, monospace">Océano Pacífico — banda HF 2–30 MHz</text>
+          </svg>
+          <div class="prop-km">
+            <span id="km">0</span> km <span data-i18n="prop.km">recorridos por la señal</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOSOTROS -->
+    <section id="nosotros" class="section window light-chapter" data-wm="06">
+      <div class="container">
+        <div class="sec-head">
+          <p class="label scramble reveal" data-i18n="about.label" data-text="06 — Quiénes somos">06 — Quiénes somos</p>
+          <span class="folio mono">06 / 07</span>
+        </div>
+        <div class="about-grid">
+          <div class="about-media">
+            <div class="type-ring" aria-hidden="true">
+              <svg viewBox="0 0 132 132">
+                <defs><path id="tring" d="M66,66 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0" fill="none" /></defs>
+                <text><textPath href="#tring">SENDER · RF · BROADCASTING · HF · NAVTEX · AM · FM ·</textPath></text>
+              </svg>
+            </div>
+            <div class="about-frame" data-parallax><img src="./assets/about.jpg" alt="Técnico Sender soldando una placa RF en el taller" loading="lazy" /></div>
+            <figcaption class="fig mono" data-i18n="fig.5">FIG. 05 — Taller Sender, San Miguel: bobinado y calibración RF</figcaption>
+          </div>
+          <div class="about-text">
+            <h2 class="split-words reveal" data-i18n="about.h2">Ingenieros de aire, fabricantes de señal.</h2>
+            <blockquote class="pull reveal" data-i18n="about.quote">«Donde la señal no puede fallar, ahí instalamos.»</blockquote>
+            <p class="reveal" data-i18n="about.p1">Somos una empresa chilena con más de 20 años de experiencia en telecomunicaciones y radiodifusión, especializada en soluciones de ingeniería, equipamiento RF y sistemas de transmisión.</p>
+            <p class="reveal" data-i18n="about.p2">Dos décadas de diseño y fabricación propios: del plano y la bobina al sistema llave en mano, con soporte técnico del mismo equipo que fabrica.</p>
+            <div class="about-points reveal">
+              <div class="point" style="--i:0"><strong data-i18n="about.pt1.h">Misión</strong><p data-i18n="about.pt1.p">Tecnología y soluciones en telecomunicaciones adaptadas a cada cliente, con innovación y soporte técnico en radiodifusión.</p></div>
+              <div class="point" style="--i:1"><strong data-i18n="about.pt2.h">Alcance</strong><p data-i18n="about.pt2.p">Instalaciones en Chile y proyectos internacionales, de la planta urbana al territorio extremo.</p></div>
+              <div class="point" style="--i:2"><strong data-i18n="about.pt3.h">Servicio</strong><p data-i18n="about.pt3.p">Repuestos y soporte directo del equipo que fabrica, sin intermediarios.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="section contacto sheet sheet-dark" data-wm="07">
+      <div class="container">
+        <div class="sec-head light-head">
+          <p class="label reveal" data-i18n="con.label">07 — Contacto</p>
+          <span class="folio mono light">07 / 07</span>
+        </div>
+        <h2 class="split-words reveal" data-i18n="con.h2">Tu próximo enlace empieza aquí.</h2>
+        <p class="section-sub reveal" data-i18n="con.sub">Radiodifusión, defensa, comunicaciones marítimas o infraestructura crítica: la ingeniería la ponemos nosotros.</p>
+
+        <div class="cta-band reveal">
+          <video class="cta-video" id="cta-video" muted loop playsinline preload="metadata"></video>
+          <div class="cta-left">
+            <h3 data-i18n="cta.h">Hablemos de su proyecto.</h3>
+            <p data-i18n="cta.p">Del estudio de ingeniería a la puesta en marcha: un solo equipo responsable de todo su enlace.</p>
+            <ul class="cta-list">
+              <li data-i18n="cta.b1">Respuesta en menos de 24 h</li>
+              <li data-i18n="cta.b2">Ingeniería y fabricación propias</li>
+              <li data-i18n="cta.b3">Normas internacionales de broadcasting</li>
+            </ul>
+          </div>
+          <div class="cta-actions">
+            <a class="btn btn-light" href="mailto:sender@sender.cl?subject=Solicitud%20de%20cotizaci%C3%B3n%20t%C3%A9cnica" data-magnetic data-i18n="cta.a1">Solicitar cotización técnica</a>
+            <a class="btn btn-outline-light" href="https://wa.me/56983864148" target="_blank" rel="noopener" data-magnetic data-i18n="cta.a2">Agendar llamada técnica</a>
+            <a class="cta-community mono" href="https://wa.me/c/56983864148" target="_blank" rel="noopener" data-i18n="cta.comm">Comunidad WhatsApp ↗</a>
+            <a class="btn btn-outline-light" href="tel:+56983864148" data-magnetic data-i18n="cta.a3">Llamar al taller</a>
+          </div>
+        </div>
+
+        <div class="contact-grid">
+          <a class="contact-card reveal" href="https://wa.me/56983864148" target="_blank" rel="noopener" data-tilt>
+            <span class="label" data-i18n="con.c1.l">WhatsApp / Celular</span>
+            <strong>(+56 9) 8386 4148</strong>
+          </a>
+          <a class="contact-card reveal" href="mailto:sender@sender.cl" data-tilt>
+            <span class="label" data-i18n="con.c2.l">Ventas</span>
+            <strong>sender@sender.cl</strong>
+            <small>bis.ltda@gmail.com</small>
+          </a>
+          <div class="contact-card reveal" data-tilt>
+            <span class="label" data-i18n="con.c3.l">Taller e ingeniería</span>
+            <strong>Blanco Viel #1108, 2º piso</strong>
+            <small>San Miguel, Santiago, Chile</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- WHATSAPP FLOTANTE -->
+  <a class="wa-fab" href="https://wa.me/56983864148" target="_blank" rel="noopener" aria-label="Chat WhatsApp Sender">
+    <span class="wa-ring" aria-hidden="true"></span>
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+    <span class="wa-tip mono" data-i18n="wa.tip">Mesa de ventas · +56 9 8386 4148</span>
+  </a>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <img src="./assets/logo.jpg" alt="Logo Sender" class="footer-logo" />
+      <div class="footer-txt">
+        <span data-i18n="foot.1">SENDER · BIS SpA — Telecomunicaciones y Broadcasting</span>
+        <span class="footer-copy" data-i18n="foot.2">© 2026 · Datos del sitio original sender.cl</span>
+      </div>
+      <a class="footer-comm mono" href="https://wa.me/c/56983864148" target="_blank" rel="noopener" data-i18n="foot.comm">Comunidad WhatsApp ↗</a>
+      <a class="footer-top" href="#hero" data-i18n="foot.top">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+
+  <div class="dossier" id="dossier" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Dossier técnico">
+    <div class="dossier-head">
+      <i class="brand-bg" style="background-image:url('./assets/brand-og.jpg')" aria-hidden="true"></i>
+      <span class="mono label" data-i18n="cat.dtitle">Dossier técnico · 15 familias</span>
+      <button class="btn btn-ghost mono" id="dossier-close" data-i18n="cat.close">Cerrar ✕</button>
+    </div>
+    <div class="dossier-body">
+      <div class="cat-table">
+          <div class="cat-row"><span class="cat-n mono">01</span><span class="cat-name" data-i18n="cat.n1">Transmisores AM de estado sólido</span><span class="cat-spec mono">1000 / 2000 / 5000 W · 490–1700 kHz</span><span class="cat-tag mono">AM</span></div>
+          <div class="cat-row"><span class="cat-n mono">02</span><span class="cat-name" data-i18n="cat.n2">Amplificador Clase D</span><span class="cat-spec mono">1000 W · alta eficiencia</span><span class="cat-tag mono">AM</span></div>
+          <div class="cat-row"><span class="cat-n mono">03</span><span class="cat-name" data-i18n="cat.n3">Transmisores FM</span><span class="cat-spec mono">FM-30 a FM-1000 · 88–108 MHz</span><span class="cat-tag mono">FM</span></div>
+          <div class="cat-row"><span class="cat-n mono">04</span><span class="cat-name" data-i18n="cat.n4">Antena HF profesional</span><span class="cat-spec mono">1.6–30 MHz · 1 kW</span><span class="cat-tag mono">HF</span></div>
+          <div class="cat-row"><span class="cat-n mono">05</span><span class="cat-name" data-i18n="cat.n5">Antenas monopolo AM / MF</span><span class="cat-spec mono">510–1700 kHz · torre aterrizada</span><span class="cat-tag mono">AM</span></div>
+          <div class="cat-row"><span class="cat-n mono">06</span><span class="cat-name" data-i18n="cat.n6">Sistema NAVTEX profesional</span><span class="cat-spec mono">490 / 518 kHz · marítimo</span><span class="cat-tag mono">MF</span></div>
+          <div class="cat-row"><span class="cat-n mono">07</span><span class="cat-name" data-i18n="cat.n7">Amplificador MF</span><span class="cat-spec mono" data-i18n="cat.s7">para AM y NAVTEX</span><span class="cat-tag mono">MF</span></div>
+          <div class="cat-row"><span class="cat-n mono">08</span><span class="cat-name" data-i18n="cat.n8">Unidad de sintonía de antena (ATU)</span><span class="cat-spec mono" data-i18n="cat.s8">acople de antena automático</span><span class="cat-tag mono">AM/HF</span></div>
+          <div class="cat-row"><span class="cat-n mono">09</span><span class="cat-name" data-i18n="cat.n9">Procesador de audio</span><span class="cat-spec mono" data-i18n="cat.s9">optimización de modulación</span><span class="cat-tag mono">AUDIO</span></div>
+          <div class="cat-row"><span class="cat-n mono">10</span><span class="cat-name" data-i18n="cat.n10">Automatización de transmisiones</span><span class="cat-spec mono" data-i18n="cat.s10">operación sin personal</span><span class="cat-tag mono">SIST</span></div>
+          <div class="cat-row"><span class="cat-n mono">11</span><span class="cat-name" data-i18n="cat.n11">Enlace estudio–planta (STL)</span><span class="cat-spec mono">AM / FM · audio profesional</span><span class="cat-tag mono">ENLACE</span></div>
+          <div class="cat-row"><span class="cat-n mono">12</span><span class="cat-name" data-i18n="cat.n12">Torres contraventadas galvanizadas</span><span class="cat-spec mono" data-i18n="cat.s12">ingeniería, montaje y desmontaje</span><span class="cat-tag mono">INFRA</span></div>
+          <div class="cat-row"><span class="cat-n mono">13</span><span class="cat-name" data-i18n="cat.n13">Cable coaxial 1/2" Super Flex · LMR-400</span><span class="cat-spec mono" data-i18n="cat.s13">baja pérdida profesional</span><span class="cat-tag mono">RF</span></div>
+          <div class="cat-row"><span class="cat-n mono">14</span><span class="cat-name" data-i18n="cat.n14">Condensadores de alta potencia</span><span class="cat-spec mono" data-i18n="cat.s14">RF y transmisión</span><span class="cat-tag mono">COMP</span></div>
+          <div class="cat-row"><span class="cat-n mono">15</span><span class="cat-name" data-i18n="cat.n15">Circuitos integrados RF</span><span class="cat-spec mono" data-i18n="cat.s15">electrónica profesional</span><span class="cat-tag mono">COMP</span></div>
+        </div>
+    </div>
+  </div>
+<div id="build-tag" class="mono" aria-hidden="true">SENDER &middot; WEB BUILD 1.0</div>
+  <div id="chapter-veil" aria-hidden="true">
+    <div class="veil-inner">
+      <span class="veil-folio mono"></span>
+      <p class="veil-title"></p>
+      <span class="veil-line"></span>
+    </div>
+  </div>
+</body>
+</html>
