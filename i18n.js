@@ -1,7 +1,7 @@
 /* =========================================================
    i18n ES/EN — switch en el nav, persistencia localStorage
    ========================================================= */
-import gsap from 'gsap';
+const gsap = window.gsap; // CDN global (sin bundler)
 
 const DICT = {
   es: {
