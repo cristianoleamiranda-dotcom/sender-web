@@ -1,1 +1,1 @@
-https://github.com/cristianoleamiranda-dotcom/sender-web/blob/cristianoleamiranda-dotcom-patch-1/.github%2Fworkflows%2Faudit.yml
+https://github.com/cristianoleamiranda-dotcom/sender-web/blob/main/styles.css
