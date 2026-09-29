@@ -1,1 +1,1 @@
-https://github.com/cristianoleamiranda-dotcom/sender-web/blob/main/styles.css
+https://github.com/cristianoleamiranda-dotcom/sender-web/tree/cristianoleamiranda-dotcom-patch-1
